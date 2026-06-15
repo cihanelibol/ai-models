@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Açık kaynak AI modellerini bilgisayarınızda çalıştırın. Sisteminizi tarar, hangi modeli çalıştırabileceğinizi, hızını ve elektrik maliyetini hesaplar. İndirme linkleri ve kullanım amaçları dahil.">
+<title>Yerel AI Model Rehberi — Sisteminizi Tarayın, Maliyeti Görün</title>
+<style>
+  :root{
+    --bg:#0a0e14; --bg2:#0f1620; --card:#131c28; --card2:#18222f;
+    --border:#1f2c3d; --border2:#2a3b52;
+    --txt:#e6edf3; --muted:#8b9bb0; --dim:#5d6b80;
+    --acc:#4da3ff; --acc2:#7c5cff;
+    --ok:#3fb950; --warn:#d29922; --bad:#f85149;
+    --chip:#1c2735;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:linear-gradient(180deg,#070b10 0%,var(--bg) 30%);
+    color:var(--txt);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--acc);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  /* HERO */
+  header.hero{padding:56px 0 36px;text-align:center;position:relative;overflow:hidden}
+  .hero h1{font-size:clamp(28px,5vw,46px);font-weight:800;letter-spacing:-.02em;
+    background:linear-gradient(90deg,#fff,#9fc6ff 55%,#b9a8ff);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1.15}
+  .hero p.sub{color:var(--muted);font-size:clamp(15px,2.2vw,19px);max-width:680px;margin:16px auto 0}
+  .pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:26px}
+  .pill{background:var(--chip);border:1px solid var(--border);border-radius:999px;
+    padding:7px 16px;font-size:13px;color:var(--muted);font-weight:600}
+  .pill b{color:var(--txt)}
+  /* SCANNER */
+  .scanner{background:linear-gradient(135deg,#101a2b,#0d1420);border:1px solid var(--border2);
+    border-radius:20px;padding:26px;margin:34px 0;box-shadow:0 20px 60px -20px rgba(0,0,0,.6)}
+  .scanner h2{font-size:20px;display:flex;align-items:center;gap:10px;margin-bottom:4px}
+  .scanner .lead{color:var(--muted);font-size:14px;margin-bottom:20px}
+  .scanbtn{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;border:none;
+    padding:13px 26px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;
+    box-shadow:0 8px 24px -8px rgba(77,163,255,.6);transition:.15s}
+  .scanbtn:hover{transform:translateY(-1px);box-shadow:0 12px 28px -8px rgba(124,92,255,.7)}
+  .scanbtn:active{transform:translateY(0)}
+  .specgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:22px}
+  .spec{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px}
+  .spec label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);margin-bottom:6px;font-weight:700}
+  .spec .val{font-size:15px;font-weight:700;color:var(--txt)}
+  .spec input,.spec select{width:100%;background:var(--bg2);border:1px solid var(--border2);color:var(--txt);
+    border-radius:8px;padding:8px 10px;font-size:14px;font-weight:600;margin-top:2px}
+  .spec input:focus,.spec select:focus{outline:none;border-color:var(--acc)}
+  .hint{font-size:11px;color:var(--dim);margin-top:6px}
+  .verdict{margin-top:22px;padding:16px 18px;border-radius:12px;font-size:15px;display:none}
+  .verdict.show{display:block}
+  .verdict.good{background:rgba(63,185,80,.12);border:1px solid rgba(63,185,80,.4)}
+  .verdict.warn{background:rgba(210,153,34,.12);border:1px solid rgba(210,153,34,.4)}
+  .verdict b{color:#fff}
+  /* SECTIONS */
+  section{margin:46px 0}
+  h2.sec{font-size:24px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+  .seclead{color:var(--muted);font-size:14px;margin-bottom:22px;max-width:760px}
+  /* FILTER BAR */
+  .filterbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;align-items:center}
+  .fbtn{background:var(--chip);border:1px solid var(--border);color:var(--muted);
+    padding:7px 14px;border-radius:999px;font-size:13px;font-weight:600;cursor:pointer;transition:.12s}
+  .fbtn:hover{border-color:var(--border2);color:var(--txt)}
+  .fbtn.active{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;border-color:transparent}
+  .runnable-toggle{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+  .runnable-toggle input{width:16px;height:16px;accent-color:var(--acc)}
+  /* GROUP */
+  .group-title{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);
+    font-weight:800;margin:30px 0 14px;display:flex;align-items:center;gap:10px}
+  .group-title .ct{background:var(--chip);border-radius:999px;padding:2px 10px;font-size:11px;color:var(--muted)}
+  /* CARDS */
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;
+    display:flex;flex-direction:column;transition:.15s;position:relative}
+  .card:hover{border-color:var(--border2);transform:translateY(-2px)}
+  .card.hide{display:none}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
+  .card .name{font-size:17px;font-weight:800;letter-spacing:-.01em}
+  .card .badge{font-size:11px;font-weight:800;padding:4px 9px;border-radius:8px;white-space:nowrap}
+  .badge.good{background:rgba(63,185,80,.15);color:#5fd673;border:1px solid rgba(63,185,80,.35)}
+  .badge.warn{background:rgba(210,153,34,.15);color:#e0b341;border:1px solid rgba(210,153,34,.35)}
+  .badge.bad{background:rgba(248,81,73,.13);color:#ff7b72;border:1px solid rgba(248,81,73,.3)}
+  .badge.neutral{background:var(--chip);color:var(--muted);border:1px solid var(--border)}
+  .card .purpose{font-size:13.5px;color:var(--muted);margin-bottom:14px;min-height:42px}
+  .metrics{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);
+    border-radius:10px;overflow:hidden;margin-bottom:14px}
+  .metric{background:var(--card2);padding:10px 12px}
+  .metric .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);font-weight:700}
+  .metric .v{font-size:15px;font-weight:800;margin-top:2px}
+  .metric .v small{font-size:11px;font-weight:600;color:var(--muted)}
+  .v.cost{color:#5fd673}
+  .card .foot{display:flex;gap:8px;margin-top:auto}
+  .dlbtn{flex:1;text-align:center;background:var(--chip);border:1px solid var(--border2);
+    color:var(--txt);padding:9px;border-radius:10px;font-size:13px;font-weight:700;transition:.12s}
+  .dlbtn:hover{background:var(--acc);border-color:var(--acc);color:#fff;text-decoration:none}
+  .tag{font-size:11px;color:var(--dim);background:var(--bg2);border:1px solid var(--border);
+    padding:3px 8px;border-radius:6px;font-weight:600}
+  .cardtags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  /* COMPARE */
+  .compare{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:20px}
+  .compare h3{font-size:18px;margin-bottom:14px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--border)}
+  th{color:var(--dim);font-size:12px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  td b{color:var(--txt)}
+  tr:last-child td{border-bottom:none}
+  .note{background:linear-gradient(135deg,#141d1a,#101813);border:1px solid #1f3a2c;
+    border-radius:16px;padding:22px 24px;margin:20px 0}
+  .note h3{color:#5fd673;font-size:16px;margin-bottom:8px;display:flex;gap:8px;align-items:center}
+  .note p{font-size:14px;color:var(--muted)}
+  .note p+p{margin-top:10px}
+  /* INFO CARDS */
+  .infogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+  .infocard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
+  .infocard h4{font-size:15px;margin-bottom:8px;display:flex;gap:8px;align-items:center}
+  .infocard p,.infocard li{font-size:13px;color:var(--muted)}
+  .infocard ul{margin-left:16px;margin-top:6px}
+  .infocard li{margin-bottom:4px}
+  code{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:2px 7px;
+    font-size:12.5px;font-family:ui-monospace,"Cascadia Code",Consolas,monospace;color:#9fc6ff}
+  pre{background:#0a0f16;border:1px solid var(--border);border-radius:10px;padding:14px 16px;
+    overflow-x:auto;margin-top:10px}
+  pre code{background:none;border:none;padding:0;color:#c9d6e3;line-height:1.7}
+  footer{border-top:1px solid var(--border);margin-top:60px;padding:30px 0;text-align:center;color:var(--dim);font-size:13px}
+  .disclaimer{font-size:12px;color:var(--dim);background:var(--card);border:1px solid var(--border);
+    border-radius:10px;padding:12px 16px;margin-top:16px}
+  @media(max-width:600px){
+    .cards{grid-template-columns:1fr}
+    .runnable-toggle{margin-left:0;width:100%;margin-top:8px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>Yapay Zekâyı Kendi Bilgisayarında Çalıştır</h1>
+    <p class="sub">27 açık kaynak AI modeli — sohbet, akıl yürütme, görsel üretim, ses ve embedding.
+       Sisteminizi tarayın; <b>hangi modeli çalıştırabileceğinizi, hızını ve elektrik maliyetini</b> anında görün.</p>
+    <div class="pills">
+      <span class="pill">📦 <b>27 model</b></span>
+      <span class="pill">💾 <b>178.8 GB</b> toplam</span>
+      <span class="pill">🔓 <b>%100</b> açık kaynak</span>
+      <span class="pill">🇹🇷 elektrik <b>₺/kWh</b> hesaplı</span>
+      <span class="pill">🔌 internetsiz çalışır</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- SİSTEM TARAYICI -->
+  <div class="scanner" id="scanner">
+    <h2>🖥️ Sistemini Tara</h2>
+    <p class="lead">Tek tıkla donanımını algılarız. Tarayıcı RAM'i tam veremez; değerleri aşağıdan düzeltebilirsin — tüm hesaplar anında güncellenir.</p>
+    <button class="scanbtn" onclick="scanSystem()">⚡ Sistemimi Tara</button>
+
+    <div class="specgrid">
+      <div class="spec">
+        <label>RAM (GB)</label>
+        <input id="ram" type="number" min="1" max="512" value="16" oninput="recompute()">
+        <div class="hint" id="ramHint">Modeller RAM'e sığmalı</div>
+      </div>
+      <div class="spec">
+        <label>İşlemci (çekirdek/thread)</label>
+        <input id="cores" type="number" min="1" max="256" value="8" oninput="recompute()">
+        <div class="hint">Hızı etkiler</div>
+      </div>
+      <div class="spec">
+        <label>Ekran Kartı VRAM (GB)</label>
+        <input id="vram" type="number" min="0" max="192" value="0" oninput="recompute()">
+        <div class="hint">0 = yok / sadece CPU</div>
+      </div>
+      <div class="spec">
+        <label>Cihaz Tipi</label>
+        <select id="device" onchange="recompute()">
+          <option value="desktop">Masaüstü PC</option>
+          <option value="laptop">Dizüstü</option>
+          <option value="mac">Mac (Apple Silicon)</option>
+        </select>
+        <div class="hint">Güç tüketimi için</div>
+      </div>
+      <div class="spec">
+        <label>Elektrik (₺/kWh)</label>
+        <input id="elec" type="number" min="0" step="0.05" value="2.95" oninput="recompute()">
+        <div class="hint">TR mesken ~2025</div>
+      </div>
+      <div class="spec">
+        <label>Dolar Kuru (₺/$)</label>
+        <input id="usd" type="number" min="1" step="0.5" value="39" oninput="recompute()">
+        <div class="hint">Bulut kıyası için</div>
+      </div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+  </div>
+
+  <!-- MODELLER -->
+  <section id="models">
+    <h2 class="sec">📦 Modeller & Maliyetler</h2>
+    <p class="seclead">Her kart sisteminize göre <b>çalışır mı?</b>, tahmini <b>hız (token/sn)</b>, gereken <b>RAM</b> ve
+       <b>1 milyon token başına elektrik maliyetini</b> gösterir. İndirme linkleri doğrudan Hugging Face'e gider.</p>
+
+    <div class="filterbar">
+      <button class="fbtn active" data-f="all" onclick="filterType(this)">Tümü</button>
+      <button class="fbtn" data-f="llm" onclick="filterType(this)">💬 Sohbet / LLM</button>
+      <button class="fbtn" data-f="image" onclick="filterType(this)">🎨 Görsel</button>
+      <button class="fbtn" data-f="speech" onclick="filterType(this)">🎙️ Ses</button>
+      <button class="fbtn" data-f="embed" onclick="filterType(this)">🔎 Embedding</button>
+      <label class="runnable-toggle"><input type="checkbox" id="onlyRun" onchange="recompute()"> Sadece çalışabilenler</label>
+    </div>
+
+    <div id="modelHost"></div>
+  </section>
+
+  <!-- BULUT KIYAS -->
+  <section id="compare">
+    <h2 class="sec">☁️ Yerel mi, Bulut mu? (Çağrı Merkezi Senaryosu)</h2>
+    <p class="seclead">Bir AI çağrı merkezinde aylık ~10 milyon token ürettiğinizi varsayalım. Yerelde tek maliyet elektrik;
+       bulutta token başına ücret ödersiniz. Rakamlar yukarıdaki kur ve elektrik değerlerinizle canlı hesaplanır.</p>
+    <div class="compare">
+      <table id="compareTable"></table>
+    </div>
+    <div class="disclaimer" id="compareNote"></div>
+  </section>
+
+  <!-- NOT -->
+  <div class="note">
+    <h3>📌 Cihan için kişisel not</h3>
+    <p>Çağrı merkezin şu an Claude Haiku'da: kalite ve kararlılık için doğru tercih. <b>Yerel modelleri Haiku'nun yerine değil, yanına</b> koy:
+       gelen çağrıyı sınıflandırma, niyet tespiti, özetleme, RAG için embedding ve transkripsiyon gibi <b>yüksek hacimli/basit işleri</b>
+       yerelde <b>Mistral-Small-24B veya Qwen3-14B</b> ile yap; karmaşık/riskli diyalogları Haiku'ya yönlendir. Bu hibrit kurguyla
+       token maliyetinin büyük kısmını sıfırlarken müşteri kalitesini korursun.</p>
+    <p>Gerçek üretim için tek bir 24GB+ VRAM ekran kartı (RTX 4090 / 5090) ya da <b>64GB+ unified memory'li bir Mac Studio</b>,
+       elindeki en büyük modelleri (32B–70B) makul hızda koşturur. Önce Mistral-Small-24B ile pilot yap, ölçümle, sonra büyüt.</p>
+  </div>
+
+  <!-- INSIGHT -->
+  <section>
+    <h2 class="sec">📊 Bilmen Gerekenler</h2>
+    <div class="infogrid">
+      <div class="infocard">
+        <h4>⚡ Elektrik & Hız nasıl hesaplandı?</h4>
+        <p>CPU çıkarımı bellek-bant-genişliği sınırlıdır: hız ≈ bant genişliği ÷ model boyutu. GPU 5–15× hızlandırır.
+           Güç: masaüstü ~95W (CPU) / ~300W (GPU), dizüstü ~45/140W, Mac ~40W. Maliyet = süre × güç × ₺/kWh. Değerler tahminîdir.</p>
+      </div>
+      <div class="infocard">
+        <h4>🧮 RAM kuralı</h4>
+        <p>Gereken RAM ≈ dosya boyutu × 1.2 + bağlam. 8B model (~4.6GB) için ~7GB, 70B (~40GB) için ~48GB önerilir.
+           VRAM'e sığarsa GPU'da çok daha hızlı çalışır; sığmazsa CPU + RAM kullanılır.</p>
+      </div>
+      <div class="infocard">
+        <h4>🍎 Mac'in avantajı</h4>
+        <p>Apple Silicon'da RAM = VRAM (unified memory). 64GB'lik bir Mac, 70B modeli tek kartla koşturabilir ve
+           sadece ~40W çeker — yerel LLM için en sessiz ve verimli seçeneklerden biridir.</p>
+      </div>
+      <div class="infocard">
+        <h4>🔢 Kuantizasyon (Q4_K_M)</h4>
+        <p>Modeller 4-bit sıkıştırılmıştır: boyut ~4× küçülür, kalite ~%1–3 düşer. Kalite/boyut dengesi için
+           tatlı nokta budur. Görsel modeller safetensors, Whisper ggml formatındadır.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- MIN GEREKSINIM -->
+  <section>
+    <h2 class="sec">⚙️ Sınıfa Göre Minimum Sistem</h2>
+    <div class="compare">
+      <table>
+        <thead><tr><th>Sınıf</th><th>Örnek</th><th>Min RAM</th><th>İdeal</th><th>CPU hızı</th></tr></thead>
+        <tbody>
+          <tr><td><b>Minik (0.6–1.7B)</b></td><td>Qwen3-0.6B</td><td>2 GB</td><td>her cihaz, telefon</td><td>çok hızlı</td></tr>
+          <tr><td><b>Küçük (3–4B)</b></td><td>Gemma-3-4B</td><td>4 GB</td><td>8GB laptop</td><td>hızlı</td></tr>
+          <tr><td><b>Orta (7–12B)</b></td><td>Llama-3.1-8B</td><td>8 GB</td><td>16GB RAM</td><td>5–10 tok/sn</td></tr>
+          <tr><td><b>Büyük (14–32B)</b></td><td>Mistral-Small-24B</td><td>16 GB</td><td>32GB / 16GB VRAM</td><td>2–5 tok/sn</td></tr>
+          <tr><td><b>Çok Büyük (70B)</b></td><td>Llama-3.3-70B</td><td>48 GB</td><td>64GB / 2×GPU</td><td>0.5–1 tok/sn</td></tr>
+          <tr><td><b>Görsel</b></td><td>SDXL / FLUX</td><td>8–16 GB VRAM</td><td>RTX 4070+</td><td>GPU şart</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- KULLANIM -->
+  <section>
+    <h2 class="sec">▶️ Nasıl Çalıştırılır?</h2>
+    <div class="infogrid">
+      <div class="infocard">
+        <h4>💬 LLM — Ollama (en kolay)</h4>
+        <p>İndir, kur, çalıştır:</p>
+        <pre><code>ollama run llama3.1:8b</code></pre>
+        <p>Ya da indirdiğin <code>.gguf</code> dosyasını <code>llama.cpp</code> ile:</p>
+        <pre><code>llama-cli -m model.gguf -p "Merhaba"</code></pre>
+      </div>
+      <div class="infocard">
+        <h4>🎨 Görsel — ComfyUI / A1111</h4>
+        <p><code>.safetensors</code> dosyasını <code>models/checkpoints/</code> klasörüne koy, arayüzden seç, prompt yaz.
+           FLUX.1-schnell sadece 4 adımda görsel üretir.</p>
+      </div>
+      <div class="infocard">
+        <h4>🎙️ Ses — whisper.cpp</h4>
+        <pre><code>whisper-cli -m ggml-large-v3.bin ses.wav -l tr</code></pre>
+        <p>99 dilde transkripsiyon + çeviri. <code>base</code> hızlı, <code>large-v3</code> en doğru.</p>
+      </div>
+      <div class="infocard">
+        <h4>🔎 Embedding — RAG</h4>
+        <p>Belgelerini vektöre çevirip semantik arama / chatbot hafızası kur. <code>bge-m3</code> çok dilli ve uzun bağlam destekler.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Açık kaynak modeller ilgili lisanslarıyla (Apache-2.0, MIT, Llama, Gemma) sunulur — ticari kullanımdan önce lisansı kontrol edin.<br>
+    İndirme linkleri Hugging Face'e gider. Hız/maliyet rakamları tahminîdir, gerçek değerler donanıma göre değişir.</p>
+  </footer>
+
+</div>
+
+<script>
+// ---- MODEL VERİSİ ----
+const HF="https://huggingface.co/";
+const M=[
+ // 01 minik
+ {g:"Minik / Edge",t:"llm",n:"Qwen3-0.6B",p:0.6,gb:0.45,q:"Q4_K_M",pur:"Telefon/edge için minik asistan, otomatik tamamlama, sınıflandırma.",url:HF+"bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf"},
+ {g:"Minik / Edge",t:"llm",n:"Llama-3.2-1B",p:1,gb:0.75,q:"Q4_K_M",pur:"Hafif sohbet ve özetleme, düşük güçlü cihazlar.",url:HF+"bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf"},
+ {g:"Minik / Edge",t:"llm",n:"Gemma-3-1B",p:1,gb:0.75,q:"Q4_K_M",pur:"Google'ın hafif edge asistanı, çok dilli.",url:HF+"bartowski/google_gemma-3-1b-it-GGUF/resolve/main/google_gemma-3-1b-it-Q4_K_M.gguf"},
+ {g:"Minik / Edge",t:"llm",n:"TinyLlama-1.1B",p:1.1,gb:0.62,q:"Q4_K_M",pur:"Deney ve eğitim için ultra hafif model.",url:HF+"TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"},
+ {g:"Minik / Edge",t:"llm",n:"SmolLM2-1.7B",p:1.7,gb:0.98,q:"Q4_K_M",pur:"Cihaz-içi asistan, boyutuna göre güçlü.",url:HF+"bartowski/SmolLM2-1.7B-Instruct-GGUF/resolve/main/SmolLM2-1.7B-Instruct-Q4_K_M.gguf"},
+ // 02 küçük
+ {g:"Küçük",t:"llm",n:"Llama-3.2-3B",p:3,gb:1.88,q:"Q4_K_M",pur:"Hafif sohbet, özet ve sınıflandırma; iyi denge.",url:HF+"bartowski/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf"},
+ {g:"Küçük",t:"llm",n:"Gemma-3-4B",p:4,gb:2.32,q:"Q4_K_M",pur:"Çok dilli, görsel-yetenekli genel amaçlı model.",url:HF+"bartowski/google_gemma-3-4b-it-GGUF/resolve/main/google_gemma-3-4b-it-Q4_K_M.gguf"},
+ {g:"Küçük",t:"llm",n:"Phi-4-mini",p:3.8,gb:2.32,q:"Q4_K_M",pur:"Akıl yürütme, matematik ve kodda güçlü küçük model.",url:HF+"bartowski/microsoft_Phi-4-mini-instruct-GGUF/resolve/main/microsoft_Phi-4-mini-instruct-Q4_K_M.gguf"},
+ // 03 orta
+ {g:"Orta",t:"llm",n:"Llama-3.1-8B",p:8,gb:4.58,q:"Q4_K_M",pur:"Genel amaçlı iş yükü, RAG, üretim için sağlam temel.",url:HF+"bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"},
+ {g:"Orta",t:"llm",n:"Qwen3-8B",p:8,gb:4.68,q:"Q4_K_M",pur:"Güçlü çok dilli ve akıl yürütme; sınıfının en iyilerinden.",url:HF+"bartowski/Qwen_Qwen3-8B-GGUF/resolve/main/Qwen_Qwen3-8B-Q4_K_M.gguf"},
+ {g:"Orta",t:"llm",n:"Mistral-7B-v0.3",p:7,gb:4.07,q:"Q4_K_M",pur:"Hızlı genel amaçlı, fonksiyon çağırma desteği.",url:HF+"bartowski/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf"},
+ {g:"Orta",t:"llm",n:"DeepSeek-R1-Distill-7B",p:7,gb:4.36,q:"Q4_K_M",pur:"Adım adım akıl yürütme (reasoning) ve matematik.",url:HF+"bartowski/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf"},
+ {g:"Orta",t:"llm",n:"Gemma-3-12B",p:12,gb:6.80,q:"Q4_K_M",pur:"Güçlü genel amaçlı, çok dilli; orta sınıfın üstü.",url:HF+"bartowski/google_gemma-3-12b-it-GGUF/resolve/main/google_gemma-3-12b-it-Q4_K_M.gguf"},
+ // 04 büyük
+ {g:"Büyük",t:"llm",n:"Qwen3-14B",p:14,gb:8.38,q:"Q4_K_M",pur:"Kaliteli genel amaçlı ve akıl yürütme; üretim adayı.",url:HF+"bartowski/Qwen_Qwen3-14B-GGUF/resolve/main/Qwen_Qwen3-14B-Q4_K_M.gguf"},
+ {g:"Büyük",t:"llm",n:"Mistral-Small-24B",p:24,gb:13.35,q:"Q4_K_M",pur:"GPT-4o-mini sınıfı; çağrı merkezi/üretim için ideal denge.",url:HF+"unsloth/Mistral-Small-24B-Instruct-2501-GGUF/resolve/main/Mistral-Small-24B-Instruct-2501-Q4_K_M.gguf"},
+ {g:"Büyük",t:"llm",n:"Gemma-3-27B",p:27,gb:15.41,q:"Q4_K_M",pur:"En güçlü Gemma; kurumsal kalite, çok dilli.",url:HF+"bartowski/google_gemma-3-27b-it-GGUF/resolve/main/google_gemma-3-27b-it-Q4_K_M.gguf"},
+ {g:"Büyük",t:"llm",n:"Qwen3-32B",p:32,gb:18.40,q:"Q4_K_M",pur:"Üst düzey akıl yürütme ve genel yetenek.",url:HF+"bartowski/Qwen_Qwen3-32B-GGUF/resolve/main/Qwen_Qwen3-32B-Q4_K_M.gguf"},
+ {g:"Büyük",t:"llm",n:"DeepSeek-R1-Distill-32B",p:32,gb:18.49,q:"Q4_K_M",pur:"Güçlü reasoning; karmaşık problem çözme.",url:HF+"bartowski/DeepSeek-R1-Distill-Qwen-32B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf"},
+ // 05 70B
+ {g:"Çok Büyük (70B)",t:"llm",n:"Llama-3.3-70B",p:70,gb:39.60,q:"Q4_K_M",pur:"GPT-4 sınıfı; bu setteki en güçlü açık model.",url:HF+"bartowski/Llama-3.3-70B-Instruct-GGUF/resolve/main/Llama-3.3-70B-Instruct-Q4_K_M.gguf"},
+ // 06 görsel
+ {g:"Görsel Üretim",t:"image",n:"Stable Diffusion 1.5",gb:3.97,vneed:4,gpuSec:3,cpuSec:120,pur:"Hızlı görsel üretim, düşük VRAM; başlangıç için ideal.",url:HF+"stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors"},
+ {g:"Görsel Üretim",t:"image",n:"SDXL Base 1.0",gb:6.46,vneed:9,gpuSec:8,cpuSec:300,pur:"Yüksek çözünürlük ve kalite; profesyonel görseller.",url:HF+"stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"},
+ {g:"Görsel Üretim",t:"image",n:"FLUX.1-schnell (fp8)",gb:16.05,vneed:14,gpuSec:5,cpuSec:600,pur:"En kaliteli; sadece 4 adımda foto-gerçekçi görsel.",url:HF+"Comfy-Org/flux1-schnell/resolve/main/flux1-schnell-fp8.safetensors"},
+ // 07 ses
+ {g:"Ses / Whisper",t:"speech",n:"Whisper Base",gb:0.14,rt_gpu:30,rt_cpu:8,pur:"Hızlı transkripsiyon; düşük kaynak, makul doğruluk.",url:HF+"ggerganov/whisper.cpp/resolve/main/ggml-base.bin"},
+ {g:"Ses / Whisper",t:"speech",n:"Whisper Large-v3",gb:2.88,rt_gpu:8,rt_cpu:1.2,pur:"En doğru transkripsiyon ve çeviri; 99 dil.",url:HF+"ggerganov/whisper.cpp/resolve/main/ggml-large-v3.bin"},
+ // 08 embedding
+ {g:"Embedding",t:"embed",n:"nomic-embed-text",gb:0.08,pur:"RAG ve semantik arama için hafif embedding.",url:HF+"nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.Q4_K_M.gguf"},
+ {g:"Embedding",t:"embed",n:"bge-m3",gb:0.41,pur:"Çok dilli, uzun bağlam destekli güçlü embedding.",url:HF+"gpustack/bge-m3-GGUF/resolve/main/bge-m3-Q4_K_M.gguf"},
+ {g:"Embedding",t:"embed",n:"Qwen3-Embedding-0.6B",gb:0.60,pur:"Güçlü çok dilli embedding; sınıfının en iyisi.",url:HF+"Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf"},
+];
+
+let curFilter="all";
+const $=id=>document.getElementById(id);
+
+async function scanSystem(){
+  const cores=navigator.hardwareConcurrency||8;
+  $("cores").value=cores;
+  // deviceMemory tarayıcıda 8 ile sınırlı; çekirdek sayısından tahmin yükselt
+  let mem=navigator.deviceMemory||8;
+  if(mem>=8 && cores>=12) mem=32; else if(mem>=8 && cores>=8) mem=16;
+  $("ram").value=mem;
+  // platform tahmini
+  const ua=navigator.userAgent.toLowerCase();
+  if(ua.includes("mac")) $("device").value="mac";
+  else if(ua.includes("mobile")||ua.includes("android")) $("device").value="laptop";
+  // WebGPU ile GPU dene
+  let gpuName="algılanamadı";
+  if(navigator.gpu){
+    try{
+      const ad=await navigator.gpu.requestAdapter();
+      if(ad){
+        const info=ad.info||(ad.requestAdapterInfo?await ad.requestAdapterInfo():{});
+        gpuName=(info&&(info.description||info.vendor))||"GPU bulundu";
+        if($("vram").value=="0") $("vram").value= $("device").value=="mac"? "0":"8";
+      }
+    }catch(e){}
+  }
+  const v=$("verdict");
+  v.className="verdict show good";
+  v.innerHTML=`✅ Algılandı: <b>${cores}</b> çekirdek · <b>~${$("ram").value} GB</b> RAM · GPU: <b>${gpuName}</b>.
+     <br><span style="color:var(--muted)">Tarayıcı RAM/VRAM'i tam veremez — değerleri elle düzeltirsen sonuçlar netleşir.</span>`;
+  recompute();
+  $("models").scrollIntoView({behavior:"smooth"});
+}
+
+// güç (Watt) tablosu
+function powerW(dev,gpuMode){
+  if(dev=="mac") return 40;
+  if(dev=="laptop") return gpuMode?140:45;
+  return gpuMode?300:95; // desktop
+}
+
+function calc(m,sys){
+  const {ram,cores,vram,dev,elec}=sys;
+  const r={};
+  if(m.t=="llm"){
+    const needGB = m.gb*1.2 + 1.5;
+    r.need=needGB;
+    // mac unified: ram=vram
+    const effV = dev=="mac"? ram : vram;
+    const gpuMode = effV >= needGB;
+    // hız: CPU bant genişliği ~ dev'e göre
+    let bw = dev=="mac"?130:(dev=="laptop"?38:52); // GB/s
+    let tps;
+    if(gpuMode){ tps = (dev=="mac"?180:420)/m.gb*0.7; }
+    else { tps = bw/m.gb*0.55 * Math.min(1, cores/8*1.1); }
+    r.tps=tps;
+    r.gpuMode=gpuMode;
+    // uygunluk
+    const avail = gpuMode? effV : ram;
+    if(avail>=needGB+2) r.fit="good"; else if(avail>=needGB) r.fit="warn"; else r.fit="bad";
+    // maliyet ₺/1M token
+    const W=powerW(dev,gpuMode);
+    r.power=W;
+    r.costM = (1e6/tps/3600)*(W/1000)*elec;
+    return r;
+  }
+  if(m.t=="image"){
+    const effV = dev=="mac"? ram : vram;
+    const gpuMode = effV >= m.vneed;
+    const sec = gpuMode? m.gpuSec : m.cpuSec;
+    r.sec=sec; r.gpuMode=gpuMode;
+    r.fit = gpuMode? "good" : (effV>=m.vneed*0.7?"warn":(ram>=m.vneed+4?"warn":"bad"));
+    if(!gpuMode && ram<m.vneed+4) r.fit="bad";
+    const W=powerW(dev,gpuMode);
+    r.costImg=(sec/3600)*(W/1000)*elec;
+    return r;
+  }
+  if(m.t=="speech"){
+    const effV = dev=="mac"? ram : vram;
+    const gpuMode = effV>=2;
+    r.rt = gpuMode? m.rt_gpu : m.rt_cpu;
+    r.gpuMode=gpuMode;
+    r.fit = ram>=2? "good":"warn";
+    return r;
+  }
+  // embed
+  r.fit="good";
+  return r;
+}
+
+function tl(x){ return "₺"+(x>=100?x.toFixed(0):x.toFixed(x>=10?1:2)); }
+
+function card(m,sys){
+  const r=calc(m,sys);
+  let badge,metrics="";
+  if(m.t=="llm"){
+    const bt=r.fit=="good"?"good":r.fit=="warn"?"warn":"bad";
+    const lbl=r.fit=="good"?(r.gpuMode?"✅ GPU'da hızlı":"✅ Çalışır"):r.fit=="warn"?"⚠️ Sınırda":"❌ Yetersiz RAM";
+    badge=`<span class="badge ${bt}">${lbl}</span>`;
+    const tps=r.tps;
+    const tpsTxt = tps>=1? tps.toFixed(tps>=10?0:1):tps.toFixed(2);
+    metrics=`
+      <div class="metric"><div class="k">Tahmini Hız</div><div class="v">${tpsTxt}<small> tok/sn</small></div></div>
+      <div class="metric"><div class="k">Gereken RAM</div><div class="v">${r.need.toFixed(1)}<small> GB</small></div></div>
+      <div class="metric"><div class="k">₺ / 1M token</div><div class="v cost">${tl(r.costM)}</div></div>
+      <div class="metric"><div class="k">Çekiş</div><div class="v">${r.power}<small> W</small></div></div>`;
+  } else if(m.t=="image"){
+    const bt=r.fit; const lbl=r.fit=="good"?"✅ GPU'da çalışır":r.fit=="warn"?"⚠️ Yavaş (CPU)":"❌ Yetersiz";
+    badge=`<span class="badge ${bt}">${lbl}</span>`;
+    const st=r.sec>=60?(r.sec/60).toFixed(1)+" dk":r.sec+" sn";
+    metrics=`
+      <div class="metric"><div class="k">Görsel Başına</div><div class="v">${st}</div></div>
+      <div class="metric"><div class="k">Gereken VRAM</div><div class="v">${m.vneed}<small> GB</small></div></div>
+      <div class="metric"><div class="k">₺ / görsel</div><div class="v cost">${tl(r.costImg)}</div></div>
+      <div class="metric"><div class="k">Mod</div><div class="v">${r.gpuMode?"GPU":"CPU"}</div></div>`;
+  } else if(m.t=="speech"){
+    badge=`<span class="badge ${r.fit}">${r.fit=="good"?"✅ Çalışır":"⚠️ Yavaş"}</span>`;
+    metrics=`
+      <div class="metric"><div class="k">Hız</div><div class="v">${r.rt}×<small> gerçek zaman</small></div></div>
+      <div class="metric"><div class="k">1 saat ses</div><div class="v">~${Math.max(1,Math.round(60/r.rt))} dk</div></div>
+      <div class="metric"><div class="k">Mod</div><div class="v">${r.gpuMode?"GPU":"CPU"}</div></div>
+      <div class="metric"><div class="k">Diller</div><div class="v">99</div></div>`;
+  } else {
+    badge=`<span class="badge good">✅ Her cihazda</span>`;
+    metrics=`
+      <div class="metric"><div class="k">Boyut</div><div class="v">${m.gb.toFixed(2)}<small> GB</small></div></div>
+      <div class="metric"><div class="k">Gereken RAM</div><div class="v">&lt;2<small> GB</small></div></div>
+      <div class="metric"><div class="k">Kullanım</div><div class="v">RAG</div></div>
+      <div class="metric"><div class="k">Maliyet</div><div class="v cost">~₺0</div></div>`;
+  }
+  const tags=[`${m.gb.toFixed(2)} GB`];
+  if(m.p) tags.push(`${m.p}B param`);
+  if(m.q) tags.push(m.q);
+  const tagsHtml=tags.map(t=>`<span class="tag">${t}</span>`).join("");
+  return `<div class="card" data-type="${m.t}" data-fit="${r.fit}">
+    <div class="top"><div class="name">${m.n}</div>${badge}</div>
+    <div class="cardtags">${tagsHtml}</div>
+    <div class="purpose">${m.pur}</div>
+    <div class="metrics">${metrics}</div>
+    <div class="foot"><a class="dlbtn" href="${m.url}" target="_blank" rel="noopener">⬇ İndir (Hugging Face)</a></div>
+  </div>`;
+}
+
+function recompute(){
+  const sys={
+    ram:+$("ram").value||16, cores:+$("cores").value||8, vram:+$("vram").value||0,
+    dev:$("device").value, elec:+$("elec").value||0, usd:+$("usd").value||39
+  };
+  const onlyRun=$("onlyRun").checked;
+  // grupla
+  const groups=[...new Set(M.map(m=>m.g))];
+  let html="";
+  groups.forEach(g=>{
+    const items=M.filter(m=>m.g===g);
+    const cardsHtml=items.map(m=>card(m,sys)).join("");
+    html+=`<div class="group-block" data-group="${g}">
+      <div class="group-title">${g} <span class="ct">${items.length}</span></div>
+      <div class="cards">${cardsHtml}</div></div>`;
+  });
+  $("modelHost").innerHTML=html;
+  applyFilter(onlyRun);
+  buildCompare(sys);
+}
+
+function applyFilter(onlyRun){
+  document.querySelectorAll(".card").forEach(c=>{
+    const okType = curFilter=="all"||c.dataset.type===curFilter;
+    const okRun = !onlyRun || c.dataset.fit!=="bad";
+    c.classList.toggle("hide", !(okType&&okRun));
+  });
+  // boş grupları gizle
+  document.querySelectorAll(".group-block").forEach(b=>{
+    const vis=[...b.querySelectorAll(".card")].some(c=>!c.classList.contains("hide"));
+    b.style.display=vis?"":"none";
+  });
+}
+
+function filterType(btn){
+  document.querySelectorAll(".fbtn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  curFilter=btn.dataset.f;
+  applyFilter($("onlyRun").checked);
+}
+
+function buildCompare(sys){
+  // aylık 10M token senaryosu
+  const tokens=10; // milyon
+  // yerel: Mistral-Small-24B referans
+  const m=M.find(x=>x.n=="Mistral-Small-24B");
+  const r=calc(m,sys);
+  const localCostMonth = r.costM*tokens;
+  // bulut: Haiku ~ %30 input ($1) %70 output ($5) karışık = $3.8/1M
+  const haikuUsd = (0.3*1 + 0.7*5); // 3.8
+  const haikuTL = haikuUsd*sys.usd*tokens;
+  const sonnetUsd=(0.3*3+0.7*15); // 12
+  const sonnetTL=sonnetUsd*sys.usd*tokens;
+  const rows=[
+    ["💻 Yerel — Mistral-Small-24B", "sadece elektrik", tl(localCostMonth), r.fit=="bad"?"⚠️ donanım yetersiz":"✅ donanımın uygun"],
+    ["☁️ Claude Haiku 4.5", "$"+haikuUsd.toFixed(1)+"/1M (karışık)", tl(haikuTL), "kalite yüksek, sıfır kurulum"],
+    ["☁️ Claude Sonnet 4.6", "$"+sonnetUsd.toFixed(1)+"/1M (karışık)", tl(sonnetTL), "en yüksek kalite"],
+  ];
+  const saving = haikuTL>0? Math.round((1-localCostMonth/haikuTL)*100):0;
+  $("compareTable").innerHTML=`
+    <thead><tr><th>Seçenek</th><th>Birim</th><th>Aylık (~10M token)</th><th>Not</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td><b>${r[2]}</b></td><td style="color:var(--muted)">${r[3]}</td></tr>`).join("")}</tbody>`;
+  $("compareNote").innerHTML=`Yerel maliyet hesaplanan donanımına göre <b>${tl(localCostMonth)}/ay</b> elektrik —
+    Haiku'ya kıyasla yaklaşık <b style="color:#5fd673">%${saving<0?0:saving} tasarruf</b>.
+    Ama bulut kurulum/bakım/ölçek/kalite garantisi sunar; doğru kurgu çoğu zaman <b>hibrit</b>tir
+    (basit işler yerel, karmaşık diyalog Haiku). Donanım amortismanı dahil değildir.`;
+}
+
+// ilk render
+recompute();
+</script>
+</body>
+</html>
