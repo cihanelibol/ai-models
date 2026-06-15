@@ -115,6 +115,14 @@
   .note h3{color:#5fd673;font-size:16px;margin-bottom:8px;display:flex;gap:8px;align-items:center}
   .note p{font-size:14px;color:var(--muted)}
   .note p+p{margin-top:10px}
+  .cta{background:linear-gradient(135deg,#101a2b,#141029);border:1px solid var(--border2);
+    border-radius:18px;padding:30px 28px;margin:24px 0;text-align:center}
+  .cta h3{font-size:21px;margin-bottom:8px}
+  .cta p{font-size:15px;color:var(--muted);max-width:560px;margin:0 auto 18px}
+  .ctabtn{display:inline-block;background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;
+    padding:13px 28px;border-radius:12px;font-size:15px;font-weight:700;
+    box-shadow:0 10px 28px -10px rgba(124,92,255,.7);transition:.15s}
+  .ctabtn:hover{transform:translateY(-1px);text-decoration:none;box-shadow:0 14px 32px -10px rgba(77,163,255,.8)}
   /* INFO CARDS */
   .infogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
   .infocard{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px}
@@ -220,8 +228,8 @@
 
   <!-- BULUT KIYAS -->
   <section id="compare">
-    <h2 class="sec">☁️ Yerel mi, Bulut mu? (Çağrı Merkezi Senaryosu)</h2>
-    <p class="seclead">Bir AI çağrı merkezinde aylık ~10 milyon token ürettiğinizi varsayalım. Yerelde tek maliyet elektrik;
+    <h2 class="sec">☁️ Yerel mi, Bulut mu?</h2>
+    <p class="seclead">Aylık ~10 milyon token ürettiğinizi varsayalım. Yerelde tek maliyet elektrik;
        bulutta token başına ücret ödersiniz. Rakamlar yukarıdaki kur ve elektrik değerlerinizle canlı hesaplanır.</p>
     <div class="compare">
       <table id="compareTable"></table>
@@ -229,15 +237,12 @@
     <div class="disclaimer" id="compareNote"></div>
   </section>
 
-  <!-- NOT -->
-  <div class="note">
-    <h3>📌 Cihan için kişisel not</h3>
-    <p>Çağrı merkezin şu an Claude Haiku'da: kalite ve kararlılık için doğru tercih. <b>Yerel modelleri Haiku'nun yerine değil, yanına</b> koy:
-       gelen çağrıyı sınıflandırma, niyet tespiti, özetleme, RAG için embedding ve transkripsiyon gibi <b>yüksek hacimli/basit işleri</b>
-       yerelde <b>Mistral-Small-24B veya Qwen3-14B</b> ile yap; karmaşık/riskli diyalogları Haiku'ya yönlendir. Bu hibrit kurguyla
-       token maliyetinin büyük kısmını sıfırlarken müşteri kalitesini korursun.</p>
-    <p>Gerçek üretim için tek bir 24GB+ VRAM ekran kartı (RTX 4090 / 5090) ya da <b>64GB+ unified memory'li bir Mac Studio</b>,
-       elindeki en büyük modelleri (32B–70B) makul hızda koşturur. Önce Mistral-Small-24B ile pilot yap, ölçümle, sonra büyüt.</p>
+  <!-- CTA -->
+  <div class="cta">
+    <h3>🤝 Bir projeniz mi var?</h3>
+    <p>Yapay zekâ çözümleri, yerel model kurulumu veya özel bir AI projesi mi planlıyorsunuz?
+       Birlikte hayata geçirelim — <b>LinkedIn'den bana ulaşın.</b></p>
+    <a class="ctabtn" id="liBtn" href="https://www.linkedin.com/in/cihanelibol/" target="_blank" rel="noopener">💼 LinkedIn'de Bağlan</a>
   </div>
 
   <!-- INSIGHT -->
@@ -342,7 +347,7 @@ const M=[
  {g:"Orta",t:"llm",n:"Gemma-3-12B",p:12,gb:6.80,q:"Q4_K_M",pur:"Güçlü genel amaçlı, çok dilli; orta sınıfın üstü.",url:HF+"bartowski/google_gemma-3-12b-it-GGUF/resolve/main/google_gemma-3-12b-it-Q4_K_M.gguf"},
  // 04 büyük
  {g:"Büyük",t:"llm",n:"Qwen3-14B",p:14,gb:8.38,q:"Q4_K_M",pur:"Kaliteli genel amaçlı ve akıl yürütme; üretim adayı.",url:HF+"bartowski/Qwen_Qwen3-14B-GGUF/resolve/main/Qwen_Qwen3-14B-Q4_K_M.gguf"},
- {g:"Büyük",t:"llm",n:"Mistral-Small-24B",p:24,gb:13.35,q:"Q4_K_M",pur:"GPT-4o-mini sınıfı; çağrı merkezi/üretim için ideal denge.",url:HF+"unsloth/Mistral-Small-24B-Instruct-2501-GGUF/resolve/main/Mistral-Small-24B-Instruct-2501-Q4_K_M.gguf"},
+ {g:"Büyük",t:"llm",n:"Mistral-Small-24B",p:24,gb:13.35,q:"Q4_K_M",pur:"GPT-4o-mini sınıfı; üretim ortamı için ideal kalite/boyut dengesi.",url:HF+"unsloth/Mistral-Small-24B-Instruct-2501-GGUF/resolve/main/Mistral-Small-24B-Instruct-2501-Q4_K_M.gguf"},
  {g:"Büyük",t:"llm",n:"Gemma-3-27B",p:27,gb:15.41,q:"Q4_K_M",pur:"En güçlü Gemma; kurumsal kalite, çok dilli.",url:HF+"bartowski/google_gemma-3-27b-it-GGUF/resolve/main/google_gemma-3-27b-it-Q4_K_M.gguf"},
  {g:"Büyük",t:"llm",n:"Qwen3-32B",p:32,gb:18.40,q:"Q4_K_M",pur:"Üst düzey akıl yürütme ve genel yetenek.",url:HF+"bartowski/Qwen_Qwen3-32B-GGUF/resolve/main/Qwen_Qwen3-32B-Q4_K_M.gguf"},
  {g:"Büyük",t:"llm",n:"DeepSeek-R1-Distill-32B",p:32,gb:18.49,q:"Q4_K_M",pur:"Güçlü reasoning; karmaşık problem çözme.",url:HF+"bartowski/DeepSeek-R1-Distill-Qwen-32B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf"},
