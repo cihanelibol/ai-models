@@ -201,8 +201,8 @@
       </div>
       <div class="spec">
         <label>Dolar Kuru (₺/$)</label>
-        <input id="usd" type="number" min="1" step="0.5" value="39" oninput="recompute()">
-        <div class="hint">Bulut kıyası için</div>
+        <input id="usd" type="number" min="1" step="0.01" value="46.28" oninput="onUsdEdit()">
+        <div class="hint" id="usdHint">TCMB'den çekiliyor…</div>
       </div>
     </div>
     <div class="verdict" id="verdict"></div>
@@ -577,8 +577,52 @@ function buildCompare(sys){
     (basit işler yerel, karmaşık diyalog Haiku). Donanım amortismanı dahil değildir.`;
 }
 
+// ---- TCMB CANLI DOLAR KURU ----
+let usdManual=false;
+function onUsdEdit(){ usdManual=true; recompute(); } // kullanıcı elle değiştirirse otomatiği durdur
+
+async function fetchUSD(){
+  const hint=$("usdHint");
+  const target="https://www.tcmb.gov.tr/kurlar/today.xml";
+  const proxies=[
+    u=>"https://api.allorigins.win/get?url="+encodeURIComponent(u),
+    u=>"https://api.codetabs.com/v1/proxy/?quest="+encodeURIComponent(u),
+    u=>"https://corsproxy.io/?url="+encodeURIComponent(u),
+    u=>"https://thingproxy.freeboard.io/fetch/"+u,
+  ];
+  for(const make of proxies){
+    try{
+      const res=await fetch(make(target),{cache:"no-store"});
+      if(!res.ok) continue;
+      let txt=await res.text();
+      if(txt.trim().startsWith("{")){ try{ txt=JSON.parse(txt).contents||txt; }catch(e){} }
+      const doc=new DOMParser().parseFromString(txt,"text/xml");
+      let rate=null;
+      doc.querySelectorAll("Currency").forEach(c=>{
+        if(c.getAttribute("Kod")==="USD"||c.getAttribute("CurrencyCode")==="USD"){
+          const fs=c.querySelector("ForexSelling")||c.querySelector("BanknoteSelling");
+          if(fs) rate=parseFloat((fs.textContent||"").replace(",","."));
+        }
+      });
+      const td=doc.querySelector("Tarih_Date");
+      const tarih=td?td.getAttribute("Tarih"):"";
+      if(rate&&rate>0){
+        if(!usdManual){ $("usd").value=rate.toFixed(2); recompute(); }
+        hint.innerHTML="✅ TCMB"+(tarih?" "+tarih:"")+": $1 = ₺"+rate.toFixed(2);
+        hint.style.color="var(--ok)";
+        return true;
+      }
+    }catch(e){/* sıradaki proxy */}
+  }
+  hint.innerHTML="⚠️ TCMB kuru çekilemedi — son değer kullanılıyor";
+  hint.style.color="var(--warn)";
+  return false;
+}
+
 // ilk render
 recompute();
+// canlı kuru çek (her sayfa açılışında)
+fetchUSD();
 </script>
 </body>
 </html>
