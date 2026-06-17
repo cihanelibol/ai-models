@@ -153,7 +153,7 @@
        Sisteminizi tarayın; <b>hangi modeli çalıştırabileceğinizi, hızını ve elektrik maliyetini</b> anında görün.</p>
     <div class="pills">
       <span class="pill">📦 <b>37 model</b></span>
-      <span class="pill">🆕 <b>5 yeni</b> (2026)</span>
+      <span class="pill">📊 <b>küçük → max</b> 5 sınıf</span>
       <span class="pill">🔓 <b>%100</b> açık kaynak</span>
       <span class="pill">🇹🇷 elektrik <b>₺/kWh</b> hesaplı</span>
       <span class="pill">🔌 internetsiz çalışır</span>
@@ -280,12 +280,12 @@
       <table>
         <thead><tr><th>Sınıf</th><th>Örnek</th><th>Min RAM</th><th>İdeal</th><th>CPU hızı</th></tr></thead>
         <tbody>
-          <tr><td><b>Minik (0.6–1.7B)</b></td><td>Qwen3-0.6B</td><td>2 GB</td><td>her cihaz, telefon</td><td>çok hızlı</td></tr>
-          <tr><td><b>Küçük (3–4B)</b></td><td>Gemma-3-4B</td><td>4 GB</td><td>8GB laptop</td><td>hızlı</td></tr>
-          <tr><td><b>Orta (7–12B)</b></td><td>Llama-3.1-8B</td><td>8 GB</td><td>16GB RAM</td><td>5–10 tok/sn</td></tr>
-          <tr><td><b>Büyük (14–32B)</b></td><td>Mistral-Small-24B</td><td>16 GB</td><td>32GB / 16GB VRAM</td><td>2–5 tok/sn</td></tr>
-          <tr><td><b>Çok Büyük (70B)</b></td><td>Llama-3.3-70B</td><td>48 GB</td><td>64GB / 2×GPU</td><td>0.5–1 tok/sn</td></tr>
-          <tr><td><b>Görsel</b></td><td>SDXL / FLUX</td><td>8–16 GB VRAM</td><td>RTX 4070+</td><td>GPU şart</td></tr>
+          <tr><td><b>🟢 Küçük (0.6–4B)</b></td><td>Gemma-3-4B</td><td>2–4 GB</td><td>her cihaz, telefon/laptop</td><td>çok hızlı</td></tr>
+          <tr><td><b>🔵 Orta (7–14B)</b></td><td>Llama-3.1-8B</td><td>8 GB</td><td>16GB RAM</td><td>5–10 tok/sn</td></tr>
+          <tr><td><b>🟣 Büyük (24–32B)</b></td><td>Mistral-Small-24B</td><td>16 GB</td><td>32GB / 16GB VRAM</td><td>2–5 tok/sn</td></tr>
+          <tr><td><b>🔴 Yüksek (35–70B)</b></td><td>Llama-3.3-70B</td><td>40–48 GB</td><td>64GB / 2×GPU</td><td>0.5–2 tok/sn</td></tr>
+          <tr><td><b>⚫ Max (sunucu)</b></td><td>Qwen 3.5 397B</td><td>150–600 GB</td><td>çoklu GPU sunucu / 512GB Mac</td><td>yerelde ❌</td></tr>
+          <tr><td><b>🎨 Görsel</b></td><td>SDXL / FLUX</td><td>8–16 GB VRAM</td><td>RTX 4070+</td><td>GPU şart</td></tr>
         </tbody>
       </table>
     </div>
@@ -331,52 +331,52 @@
 const HF="https://huggingface.co/";
 const M=[
  // 00 YENİ NESİL (2026)
- {g:"🆕 Yeni Nesil (2026)",t:"llm",n:"Gemma 4 (E4B)",p:4,gb:4.64,q:"Q4_K_M",pur:"Google'ın yeni nesil verimli edge modeli; güçlü Türkçe ve çok dilli destek.",url:HF+"unsloth/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-Q4_K_M.gguf"},
- {g:"🆕 Yeni Nesil (2026)",t:"llm",n:"Gemma 4 12B",p:12,gb:6.63,q:"Q4_K_M",pur:"Google Gemma 4 orta sınıf; çok dilli, akıl yürütme ve genel kullanımda güçlü.",url:HF+"unsloth/gemma-4-12b-it-GGUF/resolve/main/gemma-4-12b-it-Q4_K_M.gguf"},
- {g:"🆕 Yeni Nesil (2026)",t:"llm",n:"Mistral Small 3.2 (24B)",p:24,gb:13.35,q:"Q4_K_M",pur:"En yeni Mistral Small; üretim için ideal kalite/boyut dengesi, fonksiyon çağırma.",url:HF+"bartowski/mistralai_Mistral-Small-3.2-24B-Instruct-2506-GGUF/resolve/main/mistralai_Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M.gguf"},
- {g:"🆕 Yeni Nesil (2026)",t:"llm",n:"Qwen 3.6 27B",p:27,gb:15.66,q:"Q4_K_M",pur:"Alibaba'nın yeni amiral dense modeli; üst düzey akıl yürütme ve çok dilli kalite.",url:HF+"unsloth/Qwen3.6-27B-GGUF/resolve/main/Qwen3.6-27B-Q4_K_M.gguf"},
- {g:"🆕 Yeni Nesil (2026)",t:"llm",n:"Qwen 3.6 35B-A3B (MoE)",p:35,gb:20.61,q:"Q4_K_M",moeActGB:2.2,pur:"MoE: 35B kapasite ama token başına yalnız ~3B aktif → büyük model kalitesi, küçük model hızı.",url:HF+"unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"},
+ {g:"🟢 Küçük (0.6–4B)",t:"llm",n:"Gemma 4 (E4B)",p:4,gb:4.64,q:"Q4_K_M",pur:"Google'ın yeni nesil verimli edge modeli; güçlü Türkçe ve çok dilli destek.",url:HF+"unsloth/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-Q4_K_M.gguf"},
+ {g:"🔵 Orta (7–14B)",t:"llm",n:"Gemma 4 12B",p:12,gb:6.63,q:"Q4_K_M",pur:"Google Gemma 4 orta sınıf; çok dilli, akıl yürütme ve genel kullanımda güçlü.",url:HF+"unsloth/gemma-4-12b-it-GGUF/resolve/main/gemma-4-12b-it-Q4_K_M.gguf"},
+ {g:"🟣 Büyük (24–32B)",t:"llm",n:"Mistral Small 3.2 (24B)",p:24,gb:13.35,q:"Q4_K_M",pur:"En yeni Mistral Small; üretim için ideal kalite/boyut dengesi, fonksiyon çağırma.",url:HF+"bartowski/mistralai_Mistral-Small-3.2-24B-Instruct-2506-GGUF/resolve/main/mistralai_Mistral-Small-3.2-24B-Instruct-2506-Q4_K_M.gguf"},
+ {g:"🟣 Büyük (24–32B)",t:"llm",n:"Qwen 3.6 27B",p:27,gb:15.66,q:"Q4_K_M",pur:"Alibaba'nın yeni amiral dense modeli; üst düzey akıl yürütme ve çok dilli kalite.",url:HF+"unsloth/Qwen3.6-27B-GGUF/resolve/main/Qwen3.6-27B-Q4_K_M.gguf"},
+ {g:"🔴 Yüksek (35–70B)",t:"llm",n:"Qwen 3.6 35B-A3B (MoE)",p:35,gb:20.61,q:"Q4_K_M",moeActGB:2.2,pur:"MoE: 35B kapasite ama token başına yalnız ~3B aktif → büyük model kalitesi, küçük model hızı.",url:HF+"unsloth/Qwen3.6-35B-A3B-GGUF/resolve/main/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf"},
  // 01 minik
- {g:"Minik / Edge",t:"llm",n:"Qwen3-0.6B",p:0.6,gb:0.45,q:"Q4_K_M",pur:"Telefon/edge için minik asistan, otomatik tamamlama, sınıflandırma.",url:HF+"bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf"},
- {g:"Minik / Edge",t:"llm",n:"Llama-3.2-1B",p:1,gb:0.75,q:"Q4_K_M",pur:"Hafif sohbet ve özetleme, düşük güçlü cihazlar.",url:HF+"bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf"},
- {g:"Minik / Edge",t:"llm",n:"Gemma-3-1B",p:1,gb:0.75,q:"Q4_K_M",pur:"Google'ın hafif edge asistanı, çok dilli.",url:HF+"bartowski/google_gemma-3-1b-it-GGUF/resolve/main/google_gemma-3-1b-it-Q4_K_M.gguf"},
- {g:"Minik / Edge",t:"llm",n:"TinyLlama-1.1B",p:1.1,gb:0.62,q:"Q4_K_M",pur:"Deney ve eğitim için ultra hafif model.",url:HF+"TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"},
- {g:"Minik / Edge",t:"llm",n:"SmolLM2-1.7B",p:1.7,gb:0.98,q:"Q4_K_M",pur:"Cihaz-içi asistan, boyutuna göre güçlü.",url:HF+"bartowski/SmolLM2-1.7B-Instruct-GGUF/resolve/main/SmolLM2-1.7B-Instruct-Q4_K_M.gguf"},
+ {g:"🟢 Küçük (0.6–4B)",t:"llm",n:"Qwen3-0.6B",p:0.6,gb:0.45,q:"Q4_K_M",pur:"Telefon/edge için minik asistan, otomatik tamamlama, sınıflandırma.",url:HF+"bartowski/Qwen_Qwen3-0.6B-GGUF/resolve/main/Qwen_Qwen3-0.6B-Q4_K_M.gguf"},
+ {g:"🟢 Küçük (0.6–4B)",t:"llm",n:"Llama-3.2-1B",p:1,gb:0.75,q:"Q4_K_M",pur:"Hafif sohbet ve özetleme, düşük güçlü cihazlar.",url:HF+"bartowski/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf"},
+ {g:"🟢 Küçük (0.6–4B)",t:"llm",n:"Gemma-3-1B",p:1,gb:0.75,q:"Q4_K_M",pur:"Google'ın hafif edge asistanı, çok dilli.",url:HF+"bartowski/google_gemma-3-1b-it-GGUF/resolve/main/google_gemma-3-1b-it-Q4_K_M.gguf"},
+ {g:"🟢 Küçük (0.6–4B)",t:"llm",n:"TinyLlama-1.1B",p:1.1,gb:0.62,q:"Q4_K_M",pur:"Deney ve eğitim için ultra hafif model.",url:HF+"TheBloke/TinyLlama-1.1B-Chat-v1.0-GGUF/resolve/main/tinyllama-1.1b-chat-v1.0.Q4_K_M.gguf"},
+ {g:"🟢 Küçük (0.6–4B)",t:"llm",n:"SmolLM2-1.7B",p:1.7,gb:0.98,q:"Q4_K_M",pur:"Cihaz-içi asistan, boyutuna göre güçlü.",url:HF+"bartowski/SmolLM2-1.7B-Instruct-GGUF/resolve/main/SmolLM2-1.7B-Instruct-Q4_K_M.gguf"},
  // 02 küçük
- {g:"Küçük",t:"llm",n:"Llama-3.2-3B",p:3,gb:1.88,q:"Q4_K_M",pur:"Hafif sohbet, özet ve sınıflandırma; iyi denge.",url:HF+"bartowski/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf"},
- {g:"Küçük",t:"llm",n:"Gemma-3-4B",p:4,gb:2.32,q:"Q4_K_M",pur:"Çok dilli, görsel-yetenekli genel amaçlı model.",url:HF+"bartowski/google_gemma-3-4b-it-GGUF/resolve/main/google_gemma-3-4b-it-Q4_K_M.gguf"},
- {g:"Küçük",t:"llm",n:"Phi-4-mini",p:3.8,gb:2.32,q:"Q4_K_M",pur:"Akıl yürütme, matematik ve kodda güçlü küçük model.",url:HF+"bartowski/microsoft_Phi-4-mini-instruct-GGUF/resolve/main/microsoft_Phi-4-mini-instruct-Q4_K_M.gguf"},
+ {g:"🟢 Küçük (0.6–4B)",t:"llm",n:"Llama-3.2-3B",p:3,gb:1.88,q:"Q4_K_M",pur:"Hafif sohbet, özet ve sınıflandırma; iyi denge.",url:HF+"bartowski/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf"},
+ {g:"🟢 Küçük (0.6–4B)",t:"llm",n:"Gemma-3-4B",p:4,gb:2.32,q:"Q4_K_M",pur:"Çok dilli, görsel-yetenekli genel amaçlı model.",url:HF+"bartowski/google_gemma-3-4b-it-GGUF/resolve/main/google_gemma-3-4b-it-Q4_K_M.gguf"},
+ {g:"🟢 Küçük (0.6–4B)",t:"llm",n:"Phi-4-mini",p:3.8,gb:2.32,q:"Q4_K_M",pur:"Akıl yürütme, matematik ve kodda güçlü küçük model.",url:HF+"bartowski/microsoft_Phi-4-mini-instruct-GGUF/resolve/main/microsoft_Phi-4-mini-instruct-Q4_K_M.gguf"},
  // 03 orta
- {g:"Orta",t:"llm",n:"Llama-3.1-8B",p:8,gb:4.58,q:"Q4_K_M",pur:"Genel amaçlı iş yükü, RAG, üretim için sağlam temel.",url:HF+"bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"},
- {g:"Orta",t:"llm",n:"Qwen3-8B",p:8,gb:4.68,q:"Q4_K_M",pur:"Güçlü çok dilli ve akıl yürütme; sınıfının en iyilerinden.",url:HF+"bartowski/Qwen_Qwen3-8B-GGUF/resolve/main/Qwen_Qwen3-8B-Q4_K_M.gguf"},
- {g:"Orta",t:"llm",n:"Mistral-7B-v0.3",p:7,gb:4.07,q:"Q4_K_M",pur:"Hızlı genel amaçlı, fonksiyon çağırma desteği.",url:HF+"bartowski/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf"},
- {g:"Orta",t:"llm",n:"DeepSeek-R1-Distill-7B",p:7,gb:4.36,q:"Q4_K_M",pur:"Adım adım akıl yürütme (reasoning) ve matematik.",url:HF+"bartowski/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf"},
- {g:"Orta",t:"llm",n:"Gemma-3-12B",p:12,gb:6.80,q:"Q4_K_M",pur:"Güçlü genel amaçlı, çok dilli; orta sınıfın üstü.",url:HF+"bartowski/google_gemma-3-12b-it-GGUF/resolve/main/google_gemma-3-12b-it-Q4_K_M.gguf"},
+ {g:"🔵 Orta (7–14B)",t:"llm",n:"Llama-3.1-8B",p:8,gb:4.58,q:"Q4_K_M",pur:"Genel amaçlı iş yükü, RAG, üretim için sağlam temel.",url:HF+"bartowski/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"},
+ {g:"🔵 Orta (7–14B)",t:"llm",n:"Qwen3-8B",p:8,gb:4.68,q:"Q4_K_M",pur:"Güçlü çok dilli ve akıl yürütme; sınıfının en iyilerinden.",url:HF+"bartowski/Qwen_Qwen3-8B-GGUF/resolve/main/Qwen_Qwen3-8B-Q4_K_M.gguf"},
+ {g:"🔵 Orta (7–14B)",t:"llm",n:"Mistral-7B-v0.3",p:7,gb:4.07,q:"Q4_K_M",pur:"Hızlı genel amaçlı, fonksiyon çağırma desteği.",url:HF+"bartowski/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf"},
+ {g:"🔵 Orta (7–14B)",t:"llm",n:"DeepSeek-R1-Distill-7B",p:7,gb:4.36,q:"Q4_K_M",pur:"Adım adım akıl yürütme (reasoning) ve matematik.",url:HF+"bartowski/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf"},
+ {g:"🔵 Orta (7–14B)",t:"llm",n:"Gemma-3-12B",p:12,gb:6.80,q:"Q4_K_M",pur:"Güçlü genel amaçlı, çok dilli; orta sınıfın üstü.",url:HF+"bartowski/google_gemma-3-12b-it-GGUF/resolve/main/google_gemma-3-12b-it-Q4_K_M.gguf"},
  // 04 büyük
- {g:"Büyük",t:"llm",n:"Qwen3-14B",p:14,gb:8.38,q:"Q4_K_M",pur:"Kaliteli genel amaçlı ve akıl yürütme; üretim adayı.",url:HF+"bartowski/Qwen_Qwen3-14B-GGUF/resolve/main/Qwen_Qwen3-14B-Q4_K_M.gguf"},
- {g:"Büyük",t:"llm",n:"Mistral-Small-24B",p:24,gb:13.35,q:"Q4_K_M",pur:"GPT-4o-mini sınıfı; üretim ortamı için ideal kalite/boyut dengesi.",url:HF+"unsloth/Mistral-Small-24B-Instruct-2501-GGUF/resolve/main/Mistral-Small-24B-Instruct-2501-Q4_K_M.gguf"},
- {g:"Büyük",t:"llm",n:"Gemma-3-27B",p:27,gb:15.41,q:"Q4_K_M",pur:"En güçlü Gemma; kurumsal kalite, çok dilli.",url:HF+"bartowski/google_gemma-3-27b-it-GGUF/resolve/main/google_gemma-3-27b-it-Q4_K_M.gguf"},
- {g:"Büyük",t:"llm",n:"Qwen3-32B",p:32,gb:18.40,q:"Q4_K_M",pur:"Üst düzey akıl yürütme ve genel yetenek.",url:HF+"bartowski/Qwen_Qwen3-32B-GGUF/resolve/main/Qwen_Qwen3-32B-Q4_K_M.gguf"},
- {g:"Büyük",t:"llm",n:"DeepSeek-R1-Distill-32B",p:32,gb:18.49,q:"Q4_K_M",pur:"Güçlü reasoning; karmaşık problem çözme.",url:HF+"bartowski/DeepSeek-R1-Distill-Qwen-32B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf"},
+ {g:"🔵 Orta (7–14B)",t:"llm",n:"Qwen3-14B",p:14,gb:8.38,q:"Q4_K_M",pur:"Kaliteli genel amaçlı ve akıl yürütme; üretim adayı.",url:HF+"bartowski/Qwen_Qwen3-14B-GGUF/resolve/main/Qwen_Qwen3-14B-Q4_K_M.gguf"},
+ {g:"🟣 Büyük (24–32B)",t:"llm",n:"Mistral-Small-24B",p:24,gb:13.35,q:"Q4_K_M",pur:"GPT-4o-mini sınıfı; üretim ortamı için ideal kalite/boyut dengesi.",url:HF+"unsloth/Mistral-Small-24B-Instruct-2501-GGUF/resolve/main/Mistral-Small-24B-Instruct-2501-Q4_K_M.gguf"},
+ {g:"🟣 Büyük (24–32B)",t:"llm",n:"Gemma-3-27B",p:27,gb:15.41,q:"Q4_K_M",pur:"En güçlü Gemma; kurumsal kalite, çok dilli.",url:HF+"bartowski/google_gemma-3-27b-it-GGUF/resolve/main/google_gemma-3-27b-it-Q4_K_M.gguf"},
+ {g:"🟣 Büyük (24–32B)",t:"llm",n:"Qwen3-32B",p:32,gb:18.40,q:"Q4_K_M",pur:"Üst düzey akıl yürütme ve genel yetenek.",url:HF+"bartowski/Qwen_Qwen3-32B-GGUF/resolve/main/Qwen_Qwen3-32B-Q4_K_M.gguf"},
+ {g:"🟣 Büyük (24–32B)",t:"llm",n:"DeepSeek-R1-Distill-32B",p:32,gb:18.49,q:"Q4_K_M",pur:"Güçlü reasoning; karmaşık problem çözme.",url:HF+"bartowski/DeepSeek-R1-Distill-Qwen-32B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-32B-Q4_K_M.gguf"},
  // 05 70B
- {g:"Çok Büyük (70B)",t:"llm",n:"Llama-3.3-70B",p:70,gb:39.60,q:"Q4_K_M",pur:"GPT-4 sınıfı; bu setteki en güçlü açık model.",url:HF+"bartowski/Llama-3.3-70B-Instruct-GGUF/resolve/main/Llama-3.3-70B-Instruct-Q4_K_M.gguf"},
+ {g:"🔴 Yüksek (35–70B)",t:"llm",n:"Llama-3.3-70B",p:70,gb:39.60,q:"Q4_K_M",pur:"GPT-4 sınıfı; bu setteki en güçlü açık model.",url:HF+"bartowski/Llama-3.3-70B-Instruct-GGUF/resolve/main/Llama-3.3-70B-Instruct-Q4_K_M.gguf"},
  // 06 görsel
- {g:"Görsel Üretim",t:"image",n:"Stable Diffusion 1.5",gb:3.97,vneed:4,gpuSec:3,cpuSec:120,pur:"Hızlı görsel üretim, düşük VRAM; başlangıç için ideal.",url:HF+"stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors"},
- {g:"Görsel Üretim",t:"image",n:"SDXL Base 1.0",gb:6.46,vneed:9,gpuSec:8,cpuSec:300,pur:"Yüksek çözünürlük ve kalite; profesyonel görseller.",url:HF+"stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"},
- {g:"Görsel Üretim",t:"image",n:"FLUX.1-schnell (fp8)",gb:16.05,vneed:14,gpuSec:5,cpuSec:600,pur:"En kaliteli; sadece 4 adımda foto-gerçekçi görsel.",url:HF+"Comfy-Org/flux1-schnell/resolve/main/flux1-schnell-fp8.safetensors"},
+ {g:"🎨 Görsel Üretim",t:"image",n:"Stable Diffusion 1.5",gb:3.97,vneed:4,gpuSec:3,cpuSec:120,pur:"Hızlı görsel üretim, düşük VRAM; başlangıç için ideal.",url:HF+"stable-diffusion-v1-5/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors"},
+ {g:"🎨 Görsel Üretim",t:"image",n:"SDXL Base 1.0",gb:6.46,vneed:9,gpuSec:8,cpuSec:300,pur:"Yüksek çözünürlük ve kalite; profesyonel görseller.",url:HF+"stabilityai/stable-diffusion-xl-base-1.0/resolve/main/sd_xl_base_1.0.safetensors"},
+ {g:"🎨 Görsel Üretim",t:"image",n:"FLUX.1-schnell (fp8)",gb:16.05,vneed:14,gpuSec:5,cpuSec:600,pur:"En kaliteli; sadece 4 adımda foto-gerçekçi görsel.",url:HF+"Comfy-Org/flux1-schnell/resolve/main/flux1-schnell-fp8.safetensors"},
  // 07 ses
- {g:"Ses / Whisper",t:"speech",n:"Whisper Base",gb:0.14,rt_gpu:30,rt_cpu:8,pur:"Hızlı transkripsiyon; düşük kaynak, makul doğruluk.",url:HF+"ggerganov/whisper.cpp/resolve/main/ggml-base.bin"},
- {g:"Ses / Whisper",t:"speech",n:"Whisper Large-v3",gb:2.88,rt_gpu:8,rt_cpu:1.2,pur:"En doğru transkripsiyon ve çeviri; 99 dil.",url:HF+"ggerganov/whisper.cpp/resolve/main/ggml-large-v3.bin"},
+ {g:"🎙️ Ses / Whisper",t:"speech",n:"Whisper Base",gb:0.14,rt_gpu:30,rt_cpu:8,pur:"Hızlı transkripsiyon; düşük kaynak, makul doğruluk.",url:HF+"ggerganov/whisper.cpp/resolve/main/ggml-base.bin"},
+ {g:"🎙️ Ses / Whisper",t:"speech",n:"Whisper Large-v3",gb:2.88,rt_gpu:8,rt_cpu:1.2,pur:"En doğru transkripsiyon ve çeviri; 99 dil.",url:HF+"ggerganov/whisper.cpp/resolve/main/ggml-large-v3.bin"},
  // 08 embedding
- {g:"Embedding",t:"embed",n:"nomic-embed-text",gb:0.08,pur:"RAG ve semantik arama için hafif embedding.",url:HF+"nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.Q4_K_M.gguf"},
- {g:"Embedding",t:"embed",n:"bge-m3",gb:0.41,pur:"Çok dilli, uzun bağlam destekli güçlü embedding.",url:HF+"gpustack/bge-m3-GGUF/resolve/main/bge-m3-Q4_K_M.gguf"},
- {g:"Embedding",t:"embed",n:"Qwen3-Embedding-0.6B",gb:0.60,pur:"Güçlü çok dilli embedding; sınıfının en iyisi.",url:HF+"Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf"},
+ {g:"🔎 Embedding",t:"embed",n:"nomic-embed-text",gb:0.08,pur:"RAG ve semantik arama için hafif embedding.",url:HF+"nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.Q4_K_M.gguf"},
+ {g:"🔎 Embedding",t:"embed",n:"bge-m3",gb:0.41,pur:"Çok dilli, uzun bağlam destekli güçlü embedding.",url:HF+"gpustack/bge-m3-GGUF/resolve/main/bge-m3-Q4_K_M.gguf"},
+ {g:"🔎 Embedding",t:"embed",n:"Qwen3-Embedding-0.6B",gb:0.60,pur:"Güçlü çok dilli embedding; sınıfının en iyisi.",url:HF+"Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf"},
  // 09 SUNUCU SINIFI — yerelde çalışmaz, referans amaçlı
- {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"MiniMax M2.7",gb:140,arch:"MoE • ~230B",pur:"Güçlü açık frontier MoE. ~140 GB indirme; çalışması için ~150 GB+ bellek gerekir.",url:HF+"unsloth/MiniMax-M2.7-GGUF"},
- {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"DeepSeek V4 (Flash)",gb:175,arch:"MoE • hızlı varyant",pur:"DeepSeek V4 ailesinin hızlı sürümü; ajan/akıl yürütmede üst düzey. ~175 GB.",url:HF+"teamblobfish/DeepSeek-V4-Flash-GGUF"},
- {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"Qwen 3.5 397B-A17B",gb:208,arch:"397B • 17B aktif",pur:"Qwen 3.5 amiral MoE: 397B kapasite, 17B aktif. ~208 GB; 256 GB+ RAM ya da 512 GB Mac Studio gerektirir.",url:HF+"ubergarm/Qwen3.5-397B-A17B-GGUF"},
- {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"GLM-5.1",gb:465,arch:"MoE • devasa",pur:"Z.ai'nin amiral modeli; kodlama ve ajan görevlerinde lider. ~465 GB — çoklu GPU sunucu işi.",url:HF+"unsloth/GLM-5.1-GGUF"},
- {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"Kimi K2.6",gb:584,arch:"~1T • 32B aktif",pur:"Moonshot'ın ~1 trilyon parametreli devi; 32B aktif MoE. ~584 GB — veri merkezi sınıfı.",url:HF+"unsloth/Kimi-K2.6-GGUF"},
+ {g:"⚫ Max (sunucu sınıfı)",t:"server",n:"MiniMax M2.7",gb:140,arch:"MoE • ~230B",pur:"Güçlü açık frontier MoE. ~140 GB indirme; çalışması için ~150 GB+ bellek gerekir.",url:HF+"unsloth/MiniMax-M2.7-GGUF"},
+ {g:"⚫ Max (sunucu sınıfı)",t:"server",n:"DeepSeek V4 (Flash)",gb:175,arch:"MoE • hızlı varyant",pur:"DeepSeek V4 ailesinin hızlı sürümü; ajan/akıl yürütmede üst düzey. ~175 GB.",url:HF+"teamblobfish/DeepSeek-V4-Flash-GGUF"},
+ {g:"⚫ Max (sunucu sınıfı)",t:"server",n:"Qwen 3.5 397B-A17B",gb:208,arch:"397B • 17B aktif",pur:"Qwen 3.5 amiral MoE: 397B kapasite, 17B aktif. ~208 GB; 256 GB+ RAM ya da 512 GB Mac Studio gerektirir.",url:HF+"ubergarm/Qwen3.5-397B-A17B-GGUF"},
+ {g:"⚫ Max (sunucu sınıfı)",t:"server",n:"GLM-5.1",gb:465,arch:"MoE • devasa",pur:"Z.ai'nin amiral modeli; kodlama ve ajan görevlerinde lider. ~465 GB — çoklu GPU sunucu işi.",url:HF+"unsloth/GLM-5.1-GGUF"},
+ {g:"⚫ Max (sunucu sınıfı)",t:"server",n:"Kimi K2.6",gb:584,arch:"~1T • 32B aktif",pur:"Moonshot'ın ~1 trilyon parametreli devi; 32B aktif MoE. ~584 GB — veri merkezi sınıfı.",url:HF+"unsloth/Kimi-K2.6-GGUF"},
 ];
 
 let curFilter="all";
@@ -540,8 +540,10 @@ function recompute(){
     dev:$("device").value, elec:+$("elec").value||0, usd:+$("usd").value||39
   };
   const onlyRun=$("onlyRun").checked;
-  // grupla
-  const groups=[...new Set(M.map(m=>m.g))];
+  // grupla — sabit sınıf sırası
+  const ORDER=["🟢 Küçük (0.6–4B)","🔵 Orta (7–14B)","🟣 Büyük (24–32B)","🔴 Yüksek (35–70B)","⚫ Max (sunucu sınıfı)","🎨 Görsel Üretim","🎙️ Ses / Whisper","🔎 Embedding"];
+  const present=[...new Set(M.map(m=>m.g))];
+  const groups=ORDER.filter(g=>present.includes(g)).concat(present.filter(g=>!ORDER.includes(g)));
   let html="";
   groups.forEach(g=>{
     const items=M.filter(m=>m.g===g);
