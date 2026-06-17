@@ -149,10 +149,10 @@
 <header class="hero">
   <div class="wrap">
     <h1>Yapay Zekâyı Kendi Bilgisayarında Çalıştır</h1>
-    <p class="sub">32 açık kaynak AI modeli — sohbet, akıl yürütme, görsel üretim, ses ve embedding.
+    <p class="sub">37 açık kaynak AI modeli — sohbet, akıl yürütme, görsel üretim, ses ve embedding.
        Sisteminizi tarayın; <b>hangi modeli çalıştırabileceğinizi, hızını ve elektrik maliyetini</b> anında görün.</p>
     <div class="pills">
-      <span class="pill">📦 <b>32 model</b></span>
+      <span class="pill">📦 <b>37 model</b></span>
       <span class="pill">🆕 <b>5 yeni</b> (2026)</span>
       <span class="pill">🔓 <b>%100</b> açık kaynak</span>
       <span class="pill">🇹🇷 elektrik <b>₺/kWh</b> hesaplı</span>
@@ -220,6 +220,7 @@
       <button class="fbtn" data-f="image" onclick="filterType(this)">🎨 Görsel</button>
       <button class="fbtn" data-f="speech" onclick="filterType(this)">🎙️ Ses</button>
       <button class="fbtn" data-f="embed" onclick="filterType(this)">🔎 Embedding</button>
+      <button class="fbtn" data-f="server" onclick="filterType(this)">🖥️ Sunucu Sınıfı</button>
       <label class="runnable-toggle"><input type="checkbox" id="onlyRun" onchange="recompute()"> Sadece çalışabilenler</label>
     </div>
 
@@ -370,6 +371,12 @@ const M=[
  {g:"Embedding",t:"embed",n:"nomic-embed-text",gb:0.08,pur:"RAG ve semantik arama için hafif embedding.",url:HF+"nomic-ai/nomic-embed-text-v1.5-GGUF/resolve/main/nomic-embed-text-v1.5.Q4_K_M.gguf"},
  {g:"Embedding",t:"embed",n:"bge-m3",gb:0.41,pur:"Çok dilli, uzun bağlam destekli güçlü embedding.",url:HF+"gpustack/bge-m3-GGUF/resolve/main/bge-m3-Q4_K_M.gguf"},
  {g:"Embedding",t:"embed",n:"Qwen3-Embedding-0.6B",gb:0.60,pur:"Güçlü çok dilli embedding; sınıfının en iyisi.",url:HF+"Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf"},
+ // 09 SUNUCU SINIFI — yerelde çalışmaz, referans amaçlı
+ {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"MiniMax M2.7",gb:140,arch:"MoE • ~230B",pur:"Güçlü açık frontier MoE. ~140 GB indirme; çalışması için ~150 GB+ bellek gerekir.",url:HF+"unsloth/MiniMax-M2.7-GGUF"},
+ {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"DeepSeek V4 (Flash)",gb:175,arch:"MoE • hızlı varyant",pur:"DeepSeek V4 ailesinin hızlı sürümü; ajan/akıl yürütmede üst düzey. ~175 GB.",url:HF+"teamblobfish/DeepSeek-V4-Flash-GGUF"},
+ {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"Qwen 3.5 397B-A17B",gb:208,arch:"397B • 17B aktif",pur:"Qwen 3.5 amiral MoE: 397B kapasite, 17B aktif. ~208 GB; 256 GB+ RAM ya da 512 GB Mac Studio gerektirir.",url:HF+"ubergarm/Qwen3.5-397B-A17B-GGUF"},
+ {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"GLM-5.1",gb:465,arch:"MoE • devasa",pur:"Z.ai'nin amiral modeli; kodlama ve ajan görevlerinde lider. ~465 GB — çoklu GPU sunucu işi.",url:HF+"unsloth/GLM-5.1-GGUF"},
+ {g:"🖥️ Sunucu Sınıfı (yerelde çalışmaz)",t:"server",n:"Kimi K2.6",gb:584,arch:"~1T • 32B aktif",pur:"Moonshot'ın ~1 trilyon parametreli devi; 32B aktif MoE. ~584 GB — veri merkezi sınıfı.",url:HF+"unsloth/Kimi-K2.6-GGUF"},
 ];
 
 let curFilter="all";
@@ -458,6 +465,7 @@ function calc(m,sys){
     r.fit = ram>=2? "good":"warn";
     return r;
   }
+  if(m.t=="server"){ r.fit="bad"; return r; }
   // embed
   r.fit="good";
   return r;
@@ -495,6 +503,13 @@ function card(m,sys){
       <div class="metric"><div class="k">1 saat ses</div><div class="v">~${Math.max(1,Math.round(60/r.rt))} dk</div></div>
       <div class="metric"><div class="k">Mod</div><div class="v">${r.gpuMode?"GPU":"CPU"}</div></div>
       <div class="metric"><div class="k">Diller</div><div class="v">99</div></div>`;
+  } else if(m.t=="server"){
+    badge=`<span class="badge bad">❌ Yerelde çalışmaz</span>`;
+    metrics=`
+      <div class="metric"><div class="k">İndirme (Q4)</div><div class="v">${m.gb}<small> GB</small></div></div>
+      <div class="metric"><div class="k">Gereken RAM</div><div class="v">≥ ${Math.ceil(m.gb*1.05)}<small> GB</small></div></div>
+      <div class="metric"><div class="k">Mimari</div><div class="v" style="font-size:13px">${m.arch}</div></div>
+      <div class="metric"><div class="k">Donanım</div><div class="v" style="font-size:13px">sunucu / 512GB Mac</div></div>`;
   } else {
     badge=`<span class="badge good">✅ Her cihazda</span>`;
     metrics=`
@@ -503,16 +518,19 @@ function card(m,sys){
       <div class="metric"><div class="k">Kullanım</div><div class="v">RAG</div></div>
       <div class="metric"><div class="k">Maliyet</div><div class="v cost">~₺0</div></div>`;
   }
-  const tags=[`${m.gb.toFixed(2)} GB`];
+  const isServer=m.t=="server";
+  const tags=[`${isServer?m.gb:m.gb.toFixed(2)} GB`];
   if(m.p) tags.push(`${m.p}B param`);
+  if(m.arch) tags.push(m.arch);
   if(m.q) tags.push(m.q);
   const tagsHtml=tags.map(t=>`<span class="tag">${t}</span>`).join("");
+  const btn=isServer?"📂 Repo (çok parçalı)":"⬇ İndir (Hugging Face)";
   return `<div class="card" data-type="${m.t}" data-fit="${r.fit}">
     <div class="top"><div class="name">${m.n}</div>${badge}</div>
     <div class="cardtags">${tagsHtml}</div>
     <div class="purpose">${m.pur}</div>
     <div class="metrics">${metrics}</div>
-    <div class="foot"><a class="dlbtn" href="${m.url}" target="_blank" rel="noopener">⬇ İndir (Hugging Face)</a></div>
+    <div class="foot"><a class="dlbtn" href="${m.url}" target="_blank" rel="noopener">${btn}</a></div>
   </div>`;
 }
 
